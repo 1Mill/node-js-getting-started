@@ -15,7 +15,10 @@ resource "heroku_app" "default" {
 	name = "my-getting-started-node-app"
 	region = "us"
 }
-
+resource "heroku_app_release" "foobar" {
+	app = heroku_app.default.id
+	slug_id = heroku_slug.default.id
+}
 resource "heroku_slug" "default" {
 	app = heroku_app.default.id
 	buildpack_provided_description = "Node/Express"
