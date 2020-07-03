@@ -5,7 +5,20 @@ on:
     branches: [ master ]
 
 jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Use node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm install
+      - run: npm test
+
   package:
+    needs: [test]
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
