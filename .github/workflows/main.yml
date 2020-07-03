@@ -11,7 +11,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Generate release version
-        run: echo "::set-env name=VERSION::$(date +'%Y-%m-%dT%H:%M:%S')"
+        run: echo "::set-env name=VERSION::$(date +'%Y-%m-%dT%H-%M-%S')"
       - run: echo ${VERSION}
       - name: Create release
         env:
