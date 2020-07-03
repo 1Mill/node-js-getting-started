@@ -10,13 +10,13 @@ on:
 jobs:
   deploy-to-production:
     if: endsWith(github.ref, 'master') == true
-    needs: [test, package]
+    needs: [package, test]
     runs-on: ubuntu-20.04
     steps:
       - name: Download version.txt
         uses: actions/download-artifact@v1
         with:
-          name: version
+          name: verison
       - name: Check correct version is got
         run: |
           value = `cat version/version.txt`
@@ -46,7 +46,7 @@ jobs:
       - name: Upload version.txt
         uses: actions/upload-artifact@v1
         with:
-          name: verison
+          name: version
           path: version.txt
 
   test:
