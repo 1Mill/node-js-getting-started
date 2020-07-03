@@ -22,7 +22,7 @@ resource "heroku_app_release" "default" {
 resource "heroku_slug" "default" {
 	app = heroku_app.default.id
 	buildpack_provided_description = "Node/Express"
-	file_url = "https://github.com/1Mill/node-js-getting-started/archive/v0.0.1.tar.gz"
+	file_url = "https://github.com/1Mill/node-js-getting-started/releases/download/v0.0.1/v0.0.1.tgz"
 
 	process_types = {
 		web = "npm run start"
