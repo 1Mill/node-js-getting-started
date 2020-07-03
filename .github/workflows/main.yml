@@ -18,32 +18,32 @@ jobs:
   #   steps:
   #     - run: echo "${VERSION}"
 
-  package:
-    if: endsWith(github.ref, 'master') == true
-    needs: [test]
-    runs-on: ubuntu-20.04
-    steps:
-      - run: echo "${VERSION}"
-      # - name: Checkout code
-      #   uses: actions/checkout@v2
-      # - name: Create release
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   uses: actions/create-release@v1
-      #   with:
-      #     draft: false
-      #     prerelease: false
-      #     release_name: Release ${{ env.VERSION }}
-      #     tag_name: ${{ env.VERSION }}
+  # package:
+  #   if: endsWith(github.ref, 'master') == true
+  #   needs: [test]
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+  #     - name: Create release
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       uses: actions/create-release@v1
+  #       with:
+  #         draft: false
+  #         prerelease: false
+  #         release_name: Release ${{ env.VERSION }}
+  #         tag_name: ${{ env.VERSION }}
 
   test:
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Use node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - run: npm install
-      - run: npm test
+      - run: echo "(${VERSION})"
+      # - name: Checkout code
+      #   uses: actions/checkout@v2
+      # - name: Use node
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: 12.x
+      # - run: npm install
+      # - run: npm test
