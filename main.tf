@@ -15,7 +15,7 @@ resource "heroku_app" "default" {
 	name = "my-getting-started-node-app"
 	region = "us"
 }
-resource "heroku_app_release" "foobar" {
+resource "heroku_app_release" "default" {
 	app = heroku_app.default.id
 	slug_id = heroku_slug.default.id
 }
@@ -27,4 +27,11 @@ resource "heroku_slug" "default" {
 	process_types = {
 		web = "npm run start"
 	}
+}
+resource "heroku_formation" "default" {
+	app = heroku_app.default.id
+	depends_on = [ heroku_app_release.default ]
+	quantity = 1
+	size = "free"
+	type = "web"
 }
