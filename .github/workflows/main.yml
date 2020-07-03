@@ -7,47 +7,54 @@ on:
       - development
       - master
 
-env:
-  VERSION_1: ${{ (date +'%Y-%m-%dT%H-%M-%S') }}
-  VERSION_2: ${{ date +'%Y-%m-%dT%H-%M-%S' }}
-  VERSION_3: ${{ (date +'%Y-%m-%dT%H-%M-%S') }}
-
 jobs:
-  # deploy-to-production:
-  #   if: endsWith(github.ref, 'master') == true
-  #   needs: [test, package]
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - run: echo "${VERSION}"
+  deploy-to-production:
+    if: endsWith(github.ref, 'master') == true
+    needs: [test, package]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Download version.txt
+        uses: actions/download-artifact@v1
+        with:
+          name: version
+      - name: Check correct version is got
+        run: |
+          value = `cat version/version.txt`
+          echo "${value}"
+        shell: bash
 
-  # package:
-  #   if: endsWith(github.ref, 'master') == true
-  #   needs: [test]
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
-  #     - name: Create release
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       uses: actions/create-release@v1
-  #       with:
-  #         draft: false
-  #         prerelease: false
-  #         release_name: Release ${{ env.VERSION }}
-  #         tag_name: ${{ env.VERSION }}
+  package:
+    if: endsWith(github.ref, 'master') == true
+    needs: [test]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/create-release@v1
+        with:
+          draft: false
+          prerelease: false
+          release_name: Release ${{ env.VERSION }}
+          tag_name: ${{ env.VERSION }}
+      - name: Create version.txt
+        run: echo ${VERSION} > version.txt
+      - name: Upload version.txt
+        uses: actions/upload-artifact@v1
+        with:
+          name: verison
+          path: version.txt
 
   test:
     runs-on: ubuntu-20.04
     steps:
-      - run: echo ${VERSION_1}
-      - run: echo ${VERSION_2}
-      - run: echo ${VERSION_3}
-      # - name: Checkout code
-      #   uses: actions/checkout@v2
-      # - name: Use node
-      #   uses: actions/setup-node@v1
-      #   with:
-      #     node-version: 12.x
-      # - run: npm install
-      # - run: npm test
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Use node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm install
+      - run: npm test
