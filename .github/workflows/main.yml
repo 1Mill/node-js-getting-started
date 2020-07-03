@@ -16,7 +16,7 @@ jobs:
       - name: Download version.txt
         uses: actions/download-artifact@v1
         with:
-          name: verison
+          name: version
       - name: Check correct version is got
         run: |
           value = `cat version/version.txt`
