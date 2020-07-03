@@ -1,20 +1,13 @@
 name: CI
 
-on: [push]
+on:
+  pull_request:
+  push:
+    branches:
+      - development
+      - master
 
 jobs:
-  test:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Use node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - run: npm install
-      - run: npm test
-
   package:
     if: endsWith(github.ref, 'master') == true
     needs: [test]
@@ -33,3 +26,15 @@ jobs:
           prerelease: false
           release_name: Release ${{ env.VERSION }}
           tag_name: ${{ env.VERSION }}
+
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Use node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm install
+      - run: npm test
