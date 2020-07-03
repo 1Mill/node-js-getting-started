@@ -7,25 +7,34 @@ on:
       - development
       - master
 
+env:
+  VERSION: $(date +'%Y-%m-%dT%H-%M-%S')
+
 jobs:
+  # deploy-to-production:
+  #   if: endsWith(github.ref, 'master') == true
+  #   needs: [test, package]
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - run: echo "${VERSION}"
+
   package:
     if: endsWith(github.ref, 'master') == true
     needs: [test]
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Generate release version
-        run: echo "::set-env name=VERSION::$(date +'%Y-%m-%dT%H-%M-%S')"
-      - name: Create release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: actions/create-release@v1
-        with:
-          draft: false
-          prerelease: false
-          release_name: Release ${{ env.VERSION }}
-          tag_name: ${{ env.VERSION }}
+      - run: echo "${VERSION}"
+      # - name: Checkout code
+      #   uses: actions/checkout@v2
+      # - name: Create release
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   uses: actions/create-release@v1
+      #   with:
+      #     draft: false
+      #     prerelease: false
+      #     release_name: Release ${{ env.VERSION }}
+      #     tag_name: ${{ env.VERSION }}
 
   test:
     runs-on: ubuntu-20.04
