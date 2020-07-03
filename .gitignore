@@ -12,5 +12,5 @@ Dockerfile
 docker-compose.yml
 
 # Terraform
+*.terraform*
 *.tfvars*
-.terraform
