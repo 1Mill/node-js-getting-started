@@ -19,5 +19,5 @@ jobs:
         with:
           draft: false
           prerelease: false
-          release_name: Release ${VERSION}
-          tag_name: ${VERSION}
+          release_name: Release ${{ VERSION }}
+          tag_name: ${{ VERSION }}
