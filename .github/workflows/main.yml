@@ -8,7 +8,7 @@ on:
       - master
 
 env:
-  VERSION_1: ${{ $(date +'%Y-%m-%dT%H-%M-%S') }}
+  VERSION_1: ${{ (date +'%Y-%m-%dT%H-%M-%S') }}
   VERSION_2: ${{ date +'%Y-%m-%dT%H-%M-%S' }}
   VERSION_3: ${{ (date +'%Y-%m-%dT%H-%M-%S') }}
 
