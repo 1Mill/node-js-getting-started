@@ -11,6 +11,7 @@ provider "heroku" {
 	version = "~> 2.5"
 }
 
+// https://devcenter.heroku.com/articles/using-terraform-with-heroku#deploying-code-to-an-app
 // Create application in heroku
 resource "heroku_app" "default" {
 	name = "my-getting-started-node-app"
