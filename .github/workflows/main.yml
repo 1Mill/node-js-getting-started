@@ -11,8 +11,6 @@ jobs:
   deploy-to-production:
     container:
       image: 1mill/terraform-sops:2020-07-02_03-40-45
-      volumes:
-        - ./:/app
     if: endsWith(github.ref, 'master') == true
     needs: [package, test]
     runs-on: ubuntu-20.04
