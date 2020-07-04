@@ -29,10 +29,11 @@ jobs:
     needs: [package]
     runs-on: ubuntu-20.04
     steps:
+      - run: echo Version number is ${{ needs.package.outputs.VERSION }}
       - name: Fetch infastructure
         env:
           REPOSITORY: ${{ github.repository }}
-          VERSION: ${{ needs.package.outputs.version }}
+          VERSION: ${{ needs.package.outputs.VERSION }}
         run: |
           apt-get update && apt-get install --yes unzip wget
           wget -O /tmp/code.zip https://github.com/${REPOSITORY}/archive/${VERSION}.zip
@@ -71,13 +72,14 @@ jobs:
     if: endsWith(github.ref, 'master') == true
     needs: [code-test]
     outputs:
-      version: ${{ steps.version.outputs.version }}
+      VERSION: ${{ steps.CREATE_VERSION.outputs.VERSION }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: echo "::set-env name=VERSION::$(date +'%Y-%m-%dT%H-%M-%S')"
-      - run: echo "::set-output name=version=${VERSION}"
-        id: version
+      - run: |
+          echo "::set-env name=VERSION::$(date +'%Y-%m-%dT%H-%M-%S')"
+          echo "::set-output name=VERSION::${{ env.VERSION }}"
+        id: CREATE_VERSION
       - uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
