@@ -16,7 +16,7 @@ jobs:
     container:
       image: 1mill/terraform-sops:2020-07-02_03-40-45
     if: endsWith(github.ref, 'master') == true
-    needs: [package, test]
+    needs: [package]
     runs-on: ubuntu-20.04
     steps:
       - name: Download version artifact
@@ -65,7 +65,7 @@ jobs:
 
   package:
     if: endsWith(github.ref, 'master') == true
-    needs: [test]
+    needs: [code-validation]
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -89,16 +89,12 @@ jobs:
           name: version
           path: version.txt
 
-  test:
+  code-validation:
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Install node
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Run tests
-        run: |
-          npm install
-          npm test
+      - run: npm install
+      - run: npm run test
