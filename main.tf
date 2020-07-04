@@ -1,16 +1,4 @@
-variable "HEROKU_APIKEY" {
-	type = string
-}
-variable "HEROKU_EMAIL" {
-	type = string
-}
-
-provider "heroku" {
-	api_key = var.HEROKU_APIKEY
-	email = var.HEROKU_EMAIL
-	version = "~> 2.5"
-}
-
+// Remote state
 terraform {
 	required_version = "~> 0.12.26"
 
@@ -28,6 +16,28 @@ terraform {
 	}
 }
 
+// Required inputs
+variable "APPLICATION_REPOSITORY" {
+	type = string
+}
+variable "APPLICATION_VERSION" {
+	type = string
+}
+variable "HEROKU_APIKEY" {
+	type = string
+}
+variable "HEROKU_EMAIL" {
+	type = string
+}
+
+// Providers
+provider "heroku" {
+	api_key = var.HEROKU_APIKEY
+	email = var.HEROKU_EMAIL
+	version = "~> 2.5"
+}
+
+// Provision resources
 // https://devcenter.heroku.com/articles/using-terraform-with-heroku#deploying-code-to-an-app
 // Create application in heroku
 resource "heroku_app" "default" {
@@ -40,7 +50,7 @@ resource "heroku_build" "default" {
 	app = heroku_app.default.name
 	buildpacks = [ "https://github.com/heroku/heroku-buildpack-nodejs" ]
 	source = {
-		url = "https://github.com/1Mill/node-js-getting-started/archive/v0.0.1.tar.gz"
+		url = "https://github.com/${var.APPLICATION_REPOSITORY}/archive/${var.APPLICATION_VERSION}.tar.gz"
 		version = "0.0.1"
 	}
 }
