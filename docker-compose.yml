@@ -2,8 +2,9 @@ version: '3.8'
 
 services:
   terraform:
+    build: .
     env_file:
       - secret.env
-    image: 1mill/terraform-sops:2020-07-02_03-40-45
-    volumes:
-      - ./:/app
+    # image: 1mill/terraform-sops:2020-07-02_03-40-45
+    # volumes:
+    #   - ./:/app

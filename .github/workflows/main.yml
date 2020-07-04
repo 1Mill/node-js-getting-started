@@ -12,7 +12,7 @@ jobs:
     container:
       image: 1mill/terraform-sops:2020-07-02_03-40-45
     if: endsWith(github.ref, 'master') == true
-    needs: [package, test]
+    needs: [package]
     runs-on: ubuntu-20.04
     steps:
       - name: Download version artifact
@@ -21,12 +21,24 @@ jobs:
           name: version
       - name: Set version as environmental varaible
         run: echo "::set-env name=VERSION::`cat version/version.txt`"
-      - run: echo The version is ${VERSION}
-      - run: terraform --version
+      - name: Install required packages
+        run: apt-get update && apt-get install --yes unzip wget
+      - name: Fetch infastructure
+        run: |
+          wget -O /tmp/code.zip https://github.com/${APP_REPOSITORY}/archive/${APP_VERSION}.zip
+          unzip /tmp/code.zip -d /tmp
+          mv /tmp/*-${APP_VERSION}/*.tf* /app
+          rm -rf /tmp/*-${APP_VERSION}
+          rm /tmp/code.zip
+        shell: bash
+        env:
+          APP_REPOSITORY: ${{ github.repository }}
+          APP_VERSION: ${{ env.VERSION }}
+      - run: ls
 
   package:
     if: endsWith(github.ref, 'master') == true
-    needs: [test]
+    # needs: [test]
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -50,14 +62,14 @@ jobs:
           name: version
           path: version.txt
 
-  test:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Use node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - run: npm install
-      - run: npm test
+  # test:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+  #     - name: Use node
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12.x
+  #     - run: npm install
+  #     - run: npm test
