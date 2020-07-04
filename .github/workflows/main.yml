@@ -89,9 +89,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Use node
+      - name: Run tests
+        run: |
+          npm install
+          npm test
+        shell: bash
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - run: npm install
-      - run: npm test
