@@ -21,20 +21,24 @@ jobs:
           name: version
       - name: Set version as environmental varaible
         run: echo "::set-env name=VERSION::`cat version/version.txt`"
-      - name: Install required packages
-        run: apt-get update && apt-get install --yes unzip wget
       - name: Fetch infastructure
+        env:
+            APP_REPOSITORY: ${{ github.repository }}
+            APP_VERSION: ${{ env.VERSION }}
         run: |
+          apt-get update && apt-get install --yes unzip wget
           wget -O /tmp/code.zip https://github.com/${APP_REPOSITORY}/archive/${APP_VERSION}.zip
           unzip /tmp/code.zip -d /tmp
           mv /tmp/*-${APP_VERSION}/*.tf* /app
-          rm -rf /tmp/*-${APP_VERSION}
-          rm /tmp/code.zip
         shell: bash
+      - name: Provision infastructure
         env:
-          APP_REPOSITORY: ${{ github.repository }}
-          APP_VERSION: ${{ env.VERSION }}
-      - run: cd /app && ls -a
+          HEROKU_APIKEY: ${{ secrets.HEROKU_APIKEY }}
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+        run: |
+          cd /app
+          terraform init
+          terraform plan
         shell: bash
 
   package:
