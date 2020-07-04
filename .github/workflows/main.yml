@@ -12,6 +12,16 @@ defaults:
     shell: bash
 
 jobs:
+  code-test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm install
+      - run: npm run test
+
   deploy-to-production:
     container:
       image: 1mill/terraform-sops:2020-07-02_03-40-45
@@ -65,7 +75,7 @@ jobs:
 
   package:
     if: endsWith(github.ref, 'master') == true
-    needs: [code-validation]
+    needs: [code-test]
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -88,13 +98,3 @@ jobs:
         with:
           name: version
           path: version.txt
-
-  code-validation:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - run: npm install
-      - run: npm run test
