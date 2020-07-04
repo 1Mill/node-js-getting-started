@@ -12,22 +12,24 @@ jobs:
     container:
       image: 1mill/terraform-sops:2020-07-02_03-40-45
     if: endsWith(github.ref, 'master') == true
-    needs: [package]
+    needs: [package, test]
     runs-on: ubuntu-20.04
     steps:
       - name: Download version artifact
         uses: actions/download-artifact@v1
         with:
           name: version
+      - name: Set environmental VERSION
+        run: echo "::set-env name=VERSION::`cat version/version.txt`"
       - name: Fetch infastructure
         env:
-            APP_REPOSITORY: ${{ github.repository }}
-            APP_VERSION: echo "`cat version/version.txt`"
+          REPOSITORY: ${{ github.repository }}
+          VERSION: ${{ env.VERSION }}
         run: |
           apt-get update && apt-get install --yes unzip wget
-          wget -O /tmp/code.zip https://github.com/${APP_REPOSITORY}/archive/${APP_VERSION}.zip
+          wget -O /tmp/code.zip https://github.com/${REPOSITORY}/archive/${VERSION}.zip
           unzip /tmp/code.zip -d /tmp
-          mv /tmp/*-${APP_VERSION}/*.tf* /app
+          mv /tmp/*-${VERSION}/*.tf* /app
         shell: bash
       - name: Validate infastructure
         env:
@@ -58,7 +60,7 @@ jobs:
 
   package:
     if: endsWith(github.ref, 'master') == true
-    # needs: [test]
+    needs: [test]
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -82,14 +84,14 @@ jobs:
           name: version
           path: version.txt
 
-  # test:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
-  #     - name: Use node
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 12.x
-  #     - run: npm install
-  #     - run: npm test
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Use node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm install
+      - run: npm test
