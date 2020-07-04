@@ -51,7 +51,7 @@ resource "heroku_build" "default" {
 	buildpacks = [ "https://github.com/heroku/heroku-buildpack-nodejs" ]
 	source = {
 		url = "https://github.com/${var.APPLICATION_REPOSITORY}/archive/${var.APPLICATION_VERSION}.tar.gz"
-		version = "0.0.1"
+		version = var.APPLICATION_VERSION
 	}
 }
 
