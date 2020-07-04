@@ -18,9 +18,8 @@ jobs:
         with:
           name: version
       - name: Set version as environmental varaible
-        run: VERSION=`cat version/version.txt`
-        shell: bash
-      - run: echo ${VERSION}
+        run: echo "::set-env name=VERSION::`cat version/version.txt`"
+      - run: echo The version is ${VERSION}
 
   package:
     if: endsWith(github.ref, 'master') == true
