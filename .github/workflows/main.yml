@@ -34,7 +34,7 @@ jobs:
         env:
           APP_REPOSITORY: ${{ github.repository }}
           APP_VERSION: ${{ env.VERSION }}
-      - run: ls -a
+      - run: cd /app && ls -a
         shell: bash
 
   package:
