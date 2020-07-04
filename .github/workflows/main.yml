@@ -20,7 +20,7 @@ jobs:
       - name: Check correct version is got
         run: |
           value = `cat version/version.txt`
-          echo "${value}"
+          echo The result of value was ${value}
         shell: bash
 
   package:
