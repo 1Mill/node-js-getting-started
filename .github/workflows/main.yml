@@ -40,10 +40,10 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
           AWS_PROFILE: ${{ secrets.AWS_PROFILE }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_APPLICATION_REPOSITORY: ${{ github.repository }}
+          TF_VAR_APPLICATION_VERSION: ${{ env.VERSION }}
           TF_VAR_HEROKU_APIKEY: ${{ secrets.HEROKU_APIKEY }}
           TF_VAR_HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-          TV_VAR_APPLICATION_REPOSITORY: ${{ github.repository }}
-          TV_VAR_APPLICATION_VERSION: ${{ env.VERSION }}
         run: |
           cd /app
           terraform init
@@ -54,10 +54,10 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
           AWS_PROFILE: ${{ secrets.AWS_PROFILE }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_APPLICATION_REPOSITORY: ${{ github.repository }}
+          TF_VAR_APPLICATION_VERSION: ${{ env.VERSION }}
           TF_VAR_HEROKU_APIKEY: ${{ secrets.HEROKU_APIKEY }}
           TF_VAR_HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-          TV_VAR_APPLICATION_REPOSITORY: ${{ github.repository }}
-          TV_VAR_APPLICATION_VERSION: ${{ env.VERSION }}
         run: |
           cd /app
           terraform init
