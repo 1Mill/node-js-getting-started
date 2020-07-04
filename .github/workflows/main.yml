@@ -22,7 +22,7 @@ jobs:
       - name: Fetch infastructure
         env:
             APP_REPOSITORY: ${{ github.repository }}
-            APP_VERSION: ${{ cat version/version.txt }}
+            APP_VERSION: ${{ echo "`cat version/version.txt`" }}
         run: |
           apt-get update && apt-get install --yes unzip wget
           wget -O /tmp/code.zip https://github.com/${APP_REPOSITORY}/archive/${APP_VERSION}.zip
