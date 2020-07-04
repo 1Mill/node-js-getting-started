@@ -13,18 +13,14 @@ jobs:
     needs: [package, test]
     runs-on: ubuntu-20.04
     steps:
-      - name: Download version.txt
+      - name: Download version artifact
         uses: actions/download-artifact@v1
         with:
           name: version
-      - name: Check correct version is got
-        run: |
-          value=`cat version/version.txt`
-          echo The result of value was ${value}
+      - name: Set version as environmental varaible
+        run: VERSION=`cat version/version.txt`
         shell: bash
       - run: echo ${VERSION}
-      - run: echo "::set-env name=TESTING::$(date +'%Y-%m-%dT%H-%M-%S')"
-      - run: echo ${testing}
 
   package:
     if: endsWith(github.ref, 'master') == true
