@@ -12,6 +12,8 @@ jobs:
     if: endsWith(github.ref, 'master') == true
     needs: [package, test]
     runs-on: ubuntu-20.04
+    env:
+      VERSION_TEST: ${{ env.VERSION }}
     steps:
       - name: Download version.txt
         uses: actions/download-artifact@v1
@@ -22,6 +24,10 @@ jobs:
           value=`cat version/version.txt`
           echo The result of value was ${value}
         shell: bash
+      - run: echo ${VERSION_TEST}
+      - run: echo ${VERSION}
+      - run: echo "::set-env name=TESTING::$(date +'%Y-%m-%dT%H-%M-%S')"
+      - run: echo ${testing}
 
   package:
     if: endsWith(github.ref, 'master') == true
