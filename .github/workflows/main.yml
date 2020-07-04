@@ -19,12 +19,10 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: version
-      - name: Set version as environmental varaible
-        run: echo "::set-env name=VERSION::`cat version/version.txt`"
       - name: Fetch infastructure
         env:
             APP_REPOSITORY: ${{ github.repository }}
-            APP_VERSION: ${{ env.VERSION }}
+            APP_VERSION: ${{ cat version/version.txt }}
         run: |
           apt-get update && apt-get install --yes unzip wget
           wget -O /tmp/code.zip https://github.com/${APP_REPOSITORY}/archive/${APP_VERSION}.zip
