@@ -34,7 +34,8 @@ jobs:
         env:
           APP_REPOSITORY: ${{ github.repository }}
           APP_VERSION: ${{ env.VERSION }}
-      - run: ls
+      - run: ls -a
+        shell: bash
 
   package:
     if: endsWith(github.ref, 'master') == true
