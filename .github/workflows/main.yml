@@ -19,7 +19,7 @@ jobs:
           name: version
       - name: Check correct version is got
         run: |
-          value = `cat version/version.txt`
+          value=`cat version/version.txt`
           echo The result of value was ${value}
         shell: bash
 
