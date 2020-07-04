@@ -29,16 +29,10 @@ jobs:
     needs: [package]
     runs-on: ubuntu-20.04
     steps:
-      - name: Download version artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: version
-      - name: Set environmental VERSION
-        run: echo "::set-env name=VERSION::`cat version/version.txt`"
       - name: Fetch infastructure
         env:
           REPOSITORY: ${{ github.repository }}
-          VERSION: ${{ env.VERSION }}
+          VERSION: ${{ needs.package.outputs.version }}
         run: |
           apt-get update && apt-get install --yes unzip wget
           wget -O /tmp/code.zip https://github.com/${REPOSITORY}/archive/${VERSION}.zip
@@ -51,7 +45,7 @@ jobs:
           AWS_PROFILE: ${{ secrets.AWS_PROFILE }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_VAR_APPLICATION_REPOSITORY: ${{ github.repository }}
-          TF_VAR_APPLICATION_VERSION: ${{ env.VERSION }}
+          TF_VAR_APPLICATION_VERSION: ${{ needs.package.outputs.version }}
           TF_VAR_HEROKU_APIKEY: ${{ secrets.HEROKU_APIKEY }}
           TF_VAR_HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
         run: |
@@ -65,7 +59,7 @@ jobs:
           AWS_PROFILE: ${{ secrets.AWS_PROFILE }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_VAR_APPLICATION_REPOSITORY: ${{ github.repository }}
-          TF_VAR_APPLICATION_VERSION: ${{ env.VERSION }}
+          TF_VAR_APPLICATION_VERSION: ${{ needs.package.outputs.version }}
           TF_VAR_HEROKU_APIKEY: ${{ secrets.HEROKU_APIKEY }}
           TF_VAR_HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
         run: |
@@ -76,25 +70,19 @@ jobs:
   package:
     if: endsWith(github.ref, 'master') == true
     needs: [code-test]
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Generate release version
-        run: echo "::set-env name=VERSION::$(date +'%Y-%m-%dT%H-%M-%S')"
-      - name: Create release
+      - uses: actions/checkout@v2
+      - run: echo "::set-env name=VERSION::$(date +'%Y-%m-%dT%H-%M-%S')"
+      - run: echo "::set-output name=version=${VERSION}"
+        id: version
+      - uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: actions/create-release@v1
         with:
           draft: false
           prerelease: false
           release_name: Release ${{ env.VERSION }}
           tag_name: ${{ env.VERSION }}
-      - name: Create version.txt
-        run: echo ${VERSION} > version.txt
-      - name: Upload version.txt
-        uses: actions/upload-artifact@v1
-        with:
-          name: version
-          path: version.txt
