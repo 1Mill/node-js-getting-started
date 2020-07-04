@@ -22,6 +22,15 @@ jobs:
       - run: npm install
       - run: npm run test
 
+  infastructure-test:
+    container:
+      image: 1mill/terraform-sops:2020-07-02_03-40-45
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: terraform init
+      - run: terraform plan
+
   deploy-to-production:
     container:
       image: 1mill/terraform-sops:2020-07-02_03-40-45
@@ -70,7 +79,10 @@ jobs:
 
   package:
     if: endsWith(github.ref, 'master') == true
-    needs: [code-test]
+    needs: [
+      code-test,
+      infastructure-test
+    ]
     outputs:
       VERSION: ${{ steps.OUTPUT_VERSION.outputs.VERSION }}
     runs-on: ubuntu-20.04
