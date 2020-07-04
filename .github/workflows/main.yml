@@ -72,14 +72,13 @@ jobs:
     if: endsWith(github.ref, 'master') == true
     needs: [code-test]
     outputs:
-      VERSION: ${{ steps.CREATE_VERSION.outputs.VERSION }}
+      VERSION: ${{ steps.OUTPUT_VERSION.outputs.VERSION }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          echo "::set-env name=VERSION::$(date +'%Y-%m-%dT%H-%M-%S')"
-          echo "::set-output name=VERSION::${VERSION}"
-        id: CREATE_VERSION
+      - run: echo "::set-env name=VERSION::$(date +'%Y-%m-%dT%H-%M-%S')"
+      - run: echo "::set-output name=VERSION::${{ env.VERSION }}"
+        id: OUTPUT_VERSION
       - uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
