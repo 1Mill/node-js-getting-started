@@ -9,6 +9,10 @@ on:
 
 jobs:
   deploy-to-production:
+    container:
+      image: 1mill/terraform-sops:2020-07-02_03-40-45
+      volumes:
+        - ./:/app
     if: endsWith(github.ref, 'master') == true
     needs: [package, test]
     runs-on: ubuntu-20.04
@@ -20,6 +24,7 @@ jobs:
       - name: Set version as environmental varaible
         run: echo "::set-env name=VERSION::`cat version/version.txt`"
       - run: echo The version is ${VERSION}
+      - run: terraform --version
 
   package:
     if: endsWith(github.ref, 'master') == true
