@@ -43,6 +43,9 @@ jobs:
   deploy-to-production:
     container:
       image: 1mill/terraform-sops:2020-07-02_03-40-45
+    defaults:
+      run:
+        working-directory: /app
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_DEFAULT_REGION: us-east-1
