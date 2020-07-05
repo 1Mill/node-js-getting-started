@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: terraform init
-      - run: terraform plan -lock-timeout=30s
+      - run: terraform plan -lock-timeout=300s
 
   deploy-to-production:
     container:
@@ -64,7 +64,7 @@ jobs:
       - run: unzip /tmp/code.zip -d /tmp
       - run: mv /tmp/*-${{ needs.package.outputs.VERSION }}/* /app
       - run: terraform init
-      - run: terraform apply -auto-approve -lock-timeout=30s
+      - run: terraform apply -auto-approve -lock-timeout=300s
 
   package:
     if: endsWith(github.ref, 'master') == true
