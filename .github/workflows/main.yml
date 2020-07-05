@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: terraform init
-      - run: terraform plan
+      - run: terraform plan -lock-timeout=30s
 
   deploy-to-production:
     container:
