@@ -24,7 +24,7 @@ jobs:
 
   infastructure-test:
     container:
-      image: 1mill/terraform-sops:2020-07-02_03-40-45
+      image: 1mill/terraform-sops:alpine-2020-07-05T19-24-29
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_DEFAULT_REGION: us-east-1
@@ -42,7 +42,7 @@ jobs:
 
   deploy-to-production:
     container:
-      image: 1mill/terraform-sops:2020-07-02_03-40-45
+      image: 1mill/terraform-sops:alpine-2020-07-05T19-24-29
     defaults:
       run:
         working-directory: /app
@@ -59,7 +59,7 @@ jobs:
     needs: [package]
     runs-on: ubuntu-20.04
     steps:
-      - run: apt-get update && apt-get install --yes unzip wget
+      - run: apk update && apk add unzip wget
       - run: wget -O /tmp/code.zip https://github.com/${{ github.repository }}/archive/${{ needs.package.outputs.VERSION }}.zip
       - run: unzip /tmp/code.zip -d /tmp
       - run: mv /tmp/*-${{ needs.package.outputs.VERSION }}/* /app
@@ -68,10 +68,7 @@ jobs:
 
   package:
     if: endsWith(github.ref, 'master') == true
-    needs: [
-      code-test,
-      infastructure-test
-    ]
+    needs: [code-test, infastructure-test]
     outputs:
       VERSION: ${{ steps.OUTPUT_VERSION.outputs.VERSION }}
     runs-on: ubuntu-20.04
