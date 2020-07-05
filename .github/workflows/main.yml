@@ -64,7 +64,7 @@ jobs:
       - run: unzip /tmp/code.zip -d /tmp
       - run: mv /tmp/*-${{ needs.package.outputs.VERSION }}/* /app
       - run: terraform init
-      - run: terraform apply -auto-approve
+      - run: terraform apply -auto-approve -lock-timeout=30s
 
   package:
     if: endsWith(github.ref, 'master') == true
